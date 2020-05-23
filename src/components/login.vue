@@ -1,7 +1,7 @@
 <template lang="html">
 <div>
     <nav class="navbar navbar-dark bg-primary">
-        <a href="/" class="navbar-brand">Ejemplo Vue+Firebase</a>
+        <a href="/" class="navbar-brand">News Discussion</a>
     </nav>
     <div class="my-container border shadow mx-auto">
     	<h3>Access</h3>
@@ -10,7 +10,6 @@
                 <input type="text" class="form-control" v-model="user" placeholder="User...">
                 <input type="password" class="form-control mt-2" v-model="password" placeholder="Password...">
                 <button type="submit" class="btn btn-primary mt-3" v-on:click="logIn">Log In</button>
-                <p>(Hay que darle 2 veces)</p>
             </div>
         </form>
         New here? <router-link to="/register">Register a new account</router-link>.
