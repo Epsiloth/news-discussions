@@ -1,7 +1,7 @@
 <template lang="html">
 <div>
     <nav class="navbar navbar-dark bg-primary">
-        <a href="/" class="navbar-brand">News Discussion</a>
+        <a href="/" class="navbar-brand">News Discussions</a>
     </nav>
     <div class="my-container border shadow mx-auto">
     	<h3>Register User</h3>
@@ -19,6 +19,7 @@
 
 <script>
 	import firebase from 'firebase'
+	import {db} from "../db.js"
 	export default {
 	  name: 'login',
 	  components: {

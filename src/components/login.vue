@@ -1,7 +1,7 @@
 <template lang="html">
 <div>
     <nav class="navbar navbar-dark bg-primary">
-        <a href="/" class="navbar-brand">News Discussion</a>
+        <a href="/" class="navbar-brand">News Discussions</a>
     </nav>
     <div class="my-container border shadow mx-auto">
     	<h3>Access</h3>
@@ -21,6 +21,7 @@
 
 <script>
 	import firebase from 'firebase'
+	import {db} from "../db.js"
 	export default {
 	  name: 'login',
 	  components: {
@@ -38,7 +39,7 @@
 	  			firebase.auth().signInWithEmailAndPassword(this.user, this.password)
 	  			.then(() => {
 	  				alert("Connected.");
-	  				this.$router.replace('privado');
+	  				this.$router.replace('landing');
 	  			})
 	  			.catch(function(error) {
 				  var errorCode = error.code;
@@ -54,7 +55,7 @@
 	  	googleLogIn: function(){
 	  		var provider = new firebase.auth.GoogleAuthProvider();
             firebase.auth().signInWithPopup(provider).then(() => {
-                this.$router.replace('privado')
+                this.$router.replace('landing')
             }).catch(function (error) {
                 alert(error.message)
             });

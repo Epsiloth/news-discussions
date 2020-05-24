@@ -1,133 +1,49 @@
-<template lang="html">
-<div>
-    <nav class="navbar navbar-dark bg-primary">
-        <a href="/" class="navbar-brand">Ejemplo Vue+Firebase</a>
-        <button type="button" class="btn btn-secondary ml-auto" v-on:click="LogOut">Log out</button>
-    </nav>
-    <div class="container">
-        <div class="row mt-5">
-            <div class="col-sm-4">
-                <div class="card shadow" style="width: 18rem;">
-                    <div class="card-header">
-                        Agrega una nueva tarea
-                        <div class="card-body">
-                            <form @submit.prevent="AddNota">
-                                <div class="form-group">
-                                    <input type="text" class="form-control mt-2" v-model="nuevaNota.texto" placeholder="Texto">
-                                    <input type="file" class="form-control-file mt-5" v-on:change="addFile">
-                                    <button type="submit" class="btn btn-primary mt-5">Upload</button>
-                                    <p>(Hay que darle 2 veces)</p>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-8 text-center">
-                <div class="card shadow" style="width: 50rem;">
-                    <div class="card-header">
-                        Lista Tareas
-                        <div class="card-body">
-                            <table class="table table-striped table-bordered table-hover">
-                              <thead class="thead-dark">
-	                              <tr>
-	                              	<th>Autor</th>
-	                              	<th>Texto</th>
-	                              	<th>Archivo</th>
-	                              	<th>Operaciones</th>
-	                              </tr>
-                              </thead>
-                              <tbody>
-	                              <tr v-for="nota in listaNotas">
-	                              	<td>{{nota.autor}}</td>
-	                              	<td>{{nota.texto}}</td>
-	                              	<td><a :href="nota.archivo.url">{{nota.archivo.nombre}}</a></td>
-	                              	<td><button type="text" class="btn btn-danger" v-on:click="deleteNota(nota)">Eliminar</button></td>
-	                              </tr>
-                         	 </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+<template v-if="news">
+	<div>
+		 <nav class="navbar navbar-dark bg-primary">
+        	<a href="/" class="navbar-brand">News Discussions</a>
+    	 </nav>
+		<div v-for="(notice, index) in news" v-bind:key="index" class="container text-light bg-dark flex-nowrap border mb-1 text-wrap">
+			<img class="mx-auto" :src="notice.img" style="width:80px;height:80px">
+			<a class="text-light text-decoration-none" :href="notice.url" target="_blank">{{ notice.title }}</a>
+		</div>
+	</div>
 </template>
 
-<script>
+<script type="text/javascript">
+	import axios from 'axios'
 	import {db} from "../db.js"
-	import firebase from "firebase"
-
 	export default {
-	  name: 'privado',
-	  components: {
-	    
-	  },
-	  data: function(){
-	  	return {
-	  		listaNotas: [],
-	  		fichero: null,
-	  		nuevaNota:{
-	  			texto:"",
-	  			autor:"",
-	  			archivo: {
-	  				nombre:"",
-	  				url:""
-	  			}
-	  		}
-	  	}
-	  },
-	  firestore: {
-	  	listaNotas: db.collection('lista-notas')
-	  },
-	  methods:{
-	  	AddNota: function(){
-	  		firebase.storage().ref(this.fichero.name).put(this.fichero);
-	  		firebase.storage().ref().child(this.fichero.name).getDownloadURL().then(
-	  			url =>{
-	  				if(this.nuevaNota.texto != "" && this.fichero != null){
-			  			db.collection('lista-notas').add({
-			  				texto: this.nuevaNota.texto,
-			  				autor: firebase.auth().currentUser.email,
-			  				archivo: {
-			  					nombre: this.fichero.name,
-			  					url: url
-			  				}
-			  			});
-			  		this.nuevaNota.texto = "";
-			  		}else{
-			  			alert("Some fields are empty.");
-			  		}
-	  			}
-	  		)
-	  	},
-	  	addFile: function(event){
-	  		this.fichero = event.target.files[0];
-	  	},
-	  	deleteNota: function(nota){
-	  		db.collection("lista-notas").doc(nota.id).delete().then(() => {
-		    console.log("Document successfully deleted!");
-			}).catch(function(error) {
-			    console.error("Error removing document: ", error);
-			});
-	  	},
-	  	LogOut: function(){
-	  		firebase.auth().signOut().then(function() {
-			  this.$router.replace('login');
-			}).catch(function(error) {
-			  // An error happened.
-			});
-	  	}
-	  }
-	}
+		data: function() {
+			return {
+				news: []
+			}
+		},
+		mounted(){
+			const proxyurl = "https://cors-anywhere.herokuapp.com/";
+			var url = 'https://newsapi.org/v2/top-headlines?' +
+				          'country=gb&' +
+				          'apiKey=c29490f601b54caaa14a069974e9a927';
+			axios
+				.get(proxyurl+url)
+				.then((response) => {
+					if(response.totalResults < 10){
+						for(let i=0; i<response.totalResults; i++){
+							this.news.push({title: response.data.articles[i].title, url: response.data.articles[i].url, img: response.data.articles[i].urlToImage});
+						}
+					}else{
+						for(let i=0; i<10; i++){
+							console.log(response);
+							this.news.push({title: response.data.articles[i].title, url: response.data.articles[i].url, img: response.data.articles[i].urlToImage});
+						}
+					}
+				}).catch(function(error) {
+    				console.log(error);
+				});
+		}
+	};
 </script>
 
-<style>
-	#app {
-	  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-	  -webkit-font-smoothing: antialiased;
-	  -moz-osx-font-smoothing: grayscale;
-	  color: #2c3e50;
-	}
+<style type="text/css">
+	
 </style>
