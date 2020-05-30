@@ -16,10 +16,20 @@
             <p>{{description}}</p>
             <hr>
             <p>{{content}}</p>
-            <a :href="url">Read More</a>
+            <a :href="url" target="_blank">Read More</a>
+            <hr>
+            <div>
+              <input type="text" v-model="inputText">
+              <button href="/" class="btn btn-info" v-on:click="AddComment">Comment</button>
+            </div>
+            <div v-for="comment in this.$props.commentArray">
+              <hr>
+              <p><b>{{comment.author}}:</b> {{comment.comment}}</p>
+              <hr>
+            </div>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" v-on:click="close">Close</button>
+            <button type="button" class="btn btn-secondary" v-on:click="close" aria-label="Close">Close</button>
           </div>
         </div>
       </div>
@@ -28,13 +38,34 @@
 </template>
 
 <script>
+  import {db} from "../db.js"
+  import firebase from "firebase"
   export default {
     name: 'modal',
-    props: ['title', 'image', 'source', 'author', 'time', 'description', 'content', 'url'],
+    props: ['title', 'image', 'source', 'author', 'time', 'description', 'content', 'url', 'commentArray'],
+    data: function() {
+      return {
+        inputText: ''
+      }
+    },
     methods: {
       close() {
         this.$emit('close');
+        document.body.classList.toggle("modal-open");
       },
+      AddComment(){
+        var t = new Date();
+        var today = t.toString();
+        if(this.inputText != ""){
+          var id = this.$props.url.replace(/[/]/g, '');
+          db.collection("comment-list").doc(id).collection("0").add({
+            author: "author",
+            comment: this.inputText,
+            date: today
+          });
+        }
+        this.inputText = "";
+      }
     },
   };
 </script>

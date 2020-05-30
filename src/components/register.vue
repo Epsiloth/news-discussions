@@ -1,7 +1,7 @@
 <template lang="html">
 <div>
     <nav class="navbar navbar-dark bg-primary">
-        <a href="/" class="navbar-brand">News Discussions</a>
+        <a class="navbar-brand">News Discussions</a>
     </nav>
     <div class="my-container border shadow mx-auto">
     	<h3>Register User</h3>

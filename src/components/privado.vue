@@ -1,7 +1,7 @@
 <template v-if="news">
 	<div>
 		 <nav class="navbar navbar-dark bg-primary">
-        	<a href="/" class="navbar-brand">News Discussions</a>
+        	<a class="navbar-brand">News Discussions</a>
         	<button href="/" class="btn btn-warning" v-on:click="toggleGeneral">General</button>
         	<button href="/" class="btn btn-warning" v-on:click="toggleSports">Sports</button>
         	<button href="/" class="btn btn-warning" v-on:click="toggleScience">Science</button>
@@ -13,9 +13,13 @@
         		<input type="text" v-model="searchText">
         		<button href="/" class="btn btn-info" v-on:click="Search">Search</button>
         	</div>
+        	<div>
+        		<p>Hello, {{username}}!</p>
+        		<a href="/" v-on:click="Disconnect" style="color:white">Log Out</a>
+        	</div>
     	 </nav>
     	<div class="d-flex flex-wrap justify-content-center">
-			<div v-for="(notice, index) in news" v-bind:key="index" class="card m-1" style="width: 18rem;">
+			<div v-for="(notice, index) in news" v-bind:key="index" class="card m-5" style="width: 18rem;">
 				<img class="card-img-top" :src="notice.image">
 				<div class="card-body">
 					<p class="card-text">{{ notice.title }}</p>
@@ -24,7 +28,7 @@
 			</div>
 		</div>
 		<modal v-bind:title="modal.title" v-bind:image="modal.image" v-bind:source="modal.source" v-bind:author="modal.author" v-bind:time="modal.time" v-bind:description="modal.description" v-bind:content="modal.content"
-		v-bind:url="modal.url"
+		v-bind:url="modal.url" v-bind:commentArray="comments"
 	      v-show="isModalVisible"
 	      @close="closeModal"
 	    />
@@ -35,6 +39,7 @@
 	import axios from 'axios'
 	import {db} from "../db.js"
 	import modal from './modal.vue';
+	import firebase from "firebase"
 	export default {
 		components: {
 			modal
@@ -42,9 +47,11 @@
 		data: function() {
 			return {
 				isModalVisible: false,
+				username: '',
 				news: [],
 				category: 'general',
 				searchText: '',
+				comments: [],
 				modal: {
 					title: "",
 					image: "", 
@@ -58,6 +65,7 @@
 			}
 		},
 		mounted(){
+			this.username = firebase.auth().currentUser.displayName;
 			const proxyurl = "https://cors-anywhere.herokuapp.com/";
 			var url = 'https://newsapi.org/v2/top-headlines?' +
 				          'country=gb&' +
@@ -296,6 +304,7 @@
 				});
 			},
 			openDiscussion: function(notice){
+				document.body.classList.toggle("modal-open");
 				this.modal.title = notice.title;
 				this.modal.image = notice.image;
 				this.modal.source = notice.source_name;
@@ -305,11 +314,26 @@
 				this.modal.content = notice.content;
 				this.modal.url = notice.url
 				this.isModalVisible = true;
+				this.comments = []
+				var id = notice.url.replace(/[/]/g, '');
+				var docRef = db.collection("comment-list").doc(id).collection("0");
+				docRef.get()
+				.then((querySnapshot) => {
+				    querySnapshot.forEach((doc) => {
+				        this.comments.push(doc.data())
+				    });
+				});
+			},
+			Disconnect(){
+				FirebaseAuth.getInstance().signOut();
+				this.$router.replace('login')
 			}
 		}
 	}
 </script>
 
 <style type="text/css">
-  
+  	body.modal-open {
+	  overflow: hidden;
+	}
 </style>
