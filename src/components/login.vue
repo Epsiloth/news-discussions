@@ -12,7 +12,7 @@
                 <button type="submit" class="btn mt-3" v-on:click="logIn" style="background: #0b0a18; color: white">Log In</button>
             </div>
         </form>
-        New here? <router-link to="/register">Register a new account</router-link>.
+        New here? <router-link to="/register" style="color: white">Register a new account</router-link>.
         <br>
         <button type="text" class="btn btn-danger mt-2" v-on:click="googleLogIn">Sign In with Google</button>
     </div>

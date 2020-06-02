@@ -12,7 +12,7 @@
                 <button type="submit" class="btn mt-3 ml-2" v-on:click="createUser" style="background: #0b0a18; color: white">Create User</button>
             </div>
         </form>
-        <router-link to="/login">Back to Login</router-link>
+        <p><router-link to="/login" style="color: white">Back to Login</router-link>.</p>
     </div>
 </div>
 </template>
