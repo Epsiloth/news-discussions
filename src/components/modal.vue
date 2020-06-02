@@ -1,8 +1,8 @@
 <template>
-  <transition name="modal-fade">
+  <transition name="modal-fade" style="color: #eed1a0">
     <div class="modal" tabindex="-1" role="dialog" style="display:inline;">
       <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
+        <div class="modal-content" style="background: #895070">
           <div class="modal-header" style="display:block">
             <button type="button" class="close" v-on:click="close" aria-label="Close">
               <span aria-hidden="true">&times;</span>
@@ -16,11 +16,11 @@
             <p>{{description}}</p>
             <hr>
             <p>{{content}}</p>
-            <a :href="url" target="_blank">Read More</a>
+            <a :href="url" target="_blank" style="color: white">Read More</a>
             <hr>
             <div>
               <input type="text" class="form-control input-lg" v-model="inputText" v-on:keyup.enter="AddComment" placeholder="Write a comment...">
-              <button type="submit" class="btn btn-info" v-on:click="AddComment">Comment</button>
+              <button type="submit" class="btn" v-on:click="AddComment" style="background: #0b0a18; color: white">Comment</button>
             </div>
             <div v-for="comment in this.$props.commentArray">
               <hr>
@@ -29,7 +29,7 @@
             </div>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" v-on:click="close" aria-label="Close">Close</button>
+            <button type="button" class="btn" v-on:click="close" aria-label="Close" style="background: #0b0a18; color: white">Close</button>
           </div>
         </div>
       </div>

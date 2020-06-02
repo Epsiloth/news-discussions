@@ -1,15 +1,15 @@
 <template lang="html">
-<div>
-    <nav class="navbar navbar-dark bg-primary">
-        <a class="navbar-brand">News Discussions</a>
+<div style="color: #eed1a0">
+    <nav class="navbar navbar-dark" style="background: #302655">
+        <a class="navbar-brand" style="color: #eed1a0">News Discussions</a>
     </nav>
-    <div class="my-container border shadow mx-auto">
+    <div class="my-container shadow mx-auto" style="background: #895070">
     	<h3>Register User</h3>
         <form>
             <div class="form-group">
                 <input type="text" class="form-control" v-model="user" placeholder="Email...">
                 <input type="password" class="form-control mt-2" v-model="password" placeholder="Password...">
-                <button type="submit" class="btn btn-primary mt-3 ml-2" v-on:click="createUser">Create User</button>
+                <button type="submit" class="btn mt-3 ml-2" v-on:click="createUser" style="background: #0b0a18; color: white">Create User</button>
             </div>
         </form>
         <router-link to="/login">Back to Login</router-link>

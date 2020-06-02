@@ -1,7 +1,7 @@
 <template v-if="news">
-	<div>
-		 <nav class="navbar navbar-dark bg-primary">
-        	<a class="navbar-brand">News Discussions</a>
+	<div style="color: #eed1a0">
+		 <nav class="navbar navbar-dark" style="background: #302655">
+        	<a class="navbar-brand" style="color: #eed1a0">News Discussions</a>
         	<div>
 			  <b-dropdown id="dropdown-1" :text="categoryName" class="m-md-2">
 			  		<b-dropdown-item v-on:click="toggleGeneral" id="general" :active="switches.general">All</b-dropdown-item>
@@ -15,7 +15,7 @@
 			</div>
         	<div style="display:inline">
         		<input type="text" v-model="searchText" placeholder="Search articles by word...">
-        		<button class="btn btn-info" v-on:click="Search">Search</button>
+        		<button class="btn" v-on:click="Search" style="background: #0b0a18; color: white">Search</button>
         	</div>
         	<div>
         		<p>Hello, {{username}}!</p>
@@ -23,11 +23,11 @@
         	</div>
     	 </nav>
     	<div class="d-flex flex-wrap justify-content-center" id="container">
-			<div v-for="(notice, index) in news" v-bind:key="index" class="card m-5" style="width: 18rem;">
+			<div v-for="(notice, index) in news" v-bind:key="index" class="card m-5" style="width: 18rem; background: #895070">
 				<img class="card-img-top" :src="notice.image">
 				<div class="card-body">
 					<p class="card-text">{{ notice.title }}</p>
-					<button class="btn btn-primary" v-on:click="openDiscussion(notice)">Discussion</button> 
+					<button class="btn" v-on:click="openDiscussion(notice)" style="background: #0b0a18; color: white">Discussion</button> 
 				</div>
 			</div>
 		</div>
