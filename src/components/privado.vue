@@ -122,11 +122,11 @@
 				    if($(this).scrollTop() + $(this).innerHeight() >= height && that.page < 3){
 				    	const proxyurl = "https://cors-anywhere.herokuapp.com/";
 				    	if(that.category == "general"){
-				    		var url = 'http://newsapi.org/v2/top-headlines?' +
+				    		var url = 'https://newsapi.org/v2/top-headlines?' +
 							          'country=gb&page='+ that.page + '&' +
 							          'sortBy=published&apiKey=c29490f601b54caaa14a069974e9a927';
 				        }else{
-				      		var url = 'http://newsapi.org/v2/top-headlines?' +
+				      		var url = 'https://newsapi.org/v2/top-headlines?' +
 							          'country=gb&page='+ that.page + '&' + 'category='+that.category+'&' + 
 							          'sortBy=published&apiKey=c29490f601b54caaa14a069974e9a927';
 				        }
@@ -145,7 +145,7 @@
 				this.switches[this.category] = true
 				this.categoryName = "All"
 				const proxyurl = "https://cors-anywhere.herokuapp.com/";
-				var url = 'http://newsapi.org/v2/top-headlines?' +
+				var url = 'https://newsapi.org/v2/top-headlines?' +
 				          'country=gb&' +
 				          'sortBy=published&apiKey=c29490f601b54caaa14a069974e9a927';
 				this.getData(url, proxyurl);
@@ -158,7 +158,7 @@
 				this.switches[this.category] = true
 				this.categoryName = "Sports"
 				const proxyurl = "https://cors-anywhere.herokuapp.com/";
-				var url = 'http://newsapi.org/v2/top-headlines?' +
+				var url = 'https://newsapi.org/v2/top-headlines?' +
 				          'country=gb&' + 'category='+this.category+'&' +
 				          'sortBy=published&apiKey=c29490f601b54caaa14a069974e9a927';
 				this.getData(url, proxyurl);
@@ -171,7 +171,7 @@
 				this.switches[this.category] = true
 				this.categoryName = "Technology"
 				const proxyurl = "https://cors-anywhere.herokuapp.com/";
-				var url = 'http://newsapi.org/v2/top-headlines?' +
+				var url = 'https://newsapi.org/v2/top-headlines?' +
 				          'country=gb&' + 'category='+this.category+'&' +
 				          'sortBy=published&apiKey=c29490f601b54caaa14a069974e9a927';
 				this.getData(url, proxyurl);
@@ -184,7 +184,7 @@
 				this.switches[this.category] = true
 				this.categoryName = "Entertainment"
 				const proxyurl = "https://cors-anywhere.herokuapp.com/";
-				var url = 'http://newsapi.org/v2/top-headlines?' +
+				var url = 'https://newsapi.org/v2/top-headlines?' +
 				          'country=gb&' + 'category='+this.category+'&' +
 				          'sortBy=published&apiKey=c29490f601b54caaa14a069974e9a927';
 				this.getData(url, proxyurl);
@@ -197,7 +197,7 @@
 				this.switches[this.category] = true
 				this.categoryName = "Health"
 				const proxyurl = "https://cors-anywhere.herokuapp.com/";
-				var url = 'http://newsapi.org/v2/top-headlines?' +
+				var url = 'https://newsapi.org/v2/top-headlines?' +
 				          'country=gb&' + 'category='+this.category+'&' +
 				          'sortBy=published&apiKey=c29490f601b54caaa14a069974e9a927';
 				this.getData(url, proxyurl);
@@ -210,7 +210,7 @@
 				this.switches[this.category] = true
 				this.categoryName = "Science"
 				const proxyurl = "https://cors-anywhere.herokuapp.com/";
-				var url = 'http://newsapi.org/v2/top-headlines?' +
+				var url = 'https://newsapi.org/v2/top-headlines?' +
 				          'country=gb&' + 'category='+this.category+'&' +
 				          'sortBy=published&apiKey=c29490f601b54caaa14a069974e9a927';
 				this.getData(url, proxyurl);
@@ -223,7 +223,7 @@
 				this.switches[this.category] = true
 				this.categoryName = "Business"
 				const proxyurl = "https://cors-anywhere.herokuapp.com/";
-				var url = 'http://newsapi.org/v2/top-headlines?' +
+				var url = 'https://newsapi.org/v2/top-headlines?' +
 				          'country=gb&' + 'category='+this.category+'&' +
 				          'sortBy=published&apiKey=c29490f601b54caaa14a069974e9a927';
 				this.getData(url, proxyurl);
@@ -232,7 +232,7 @@
 			Search: function(){
 				this.news = []
 				const proxyurl = "https://cors-anywhere.herokuapp.com/";
-				var searchurl = 'http://newsapi.org/v2/everything?' +
+				var searchurl = 'https://newsapi.org/v2/everything?' +
 				          'language=en&' + 'q='+String(this.searchText)+'&'+
 				          'sortBy=published&apiKey=c29490f601b54caaa14a069974e9a927';
 				this.getData(searchurl, proxyurl);
