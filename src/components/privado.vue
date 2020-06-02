@@ -2,16 +2,20 @@
 	<div>
 		 <nav class="navbar navbar-dark bg-primary">
         	<a class="navbar-brand">News Discussions</a>
-        	<button href="/" class="btn btn-warning" v-on:click="toggleGeneral">General</button>
-        	<button href="/" class="btn btn-warning" v-on:click="toggleSports">Sports</button>
-        	<button href="/" class="btn btn-warning" v-on:click="toggleScience">Science</button>
-        	<button href="/" class="btn btn-warning" v-on:click="toggleHealth">Health</button>
-        	<button href="/" class="btn btn-warning" v-on:click="toggleTechnology">Technology</button>
-        	<button href="/" class="btn btn-warning" v-on:click="toggleEntertainment">Entertainment</button>
-        	<button href="/" class="btn btn-warning" v-on:click="toggleBusiness">Bussiness</button>
         	<div>
-        		<input type="text" v-model="searchText">
-        		<button href="/" class="btn btn-info" v-on:click="Search">Search</button>
+			  <b-dropdown id="dropdown-1" :text="categoryName" class="m-md-2">
+			  		<b-dropdown-item v-on:click="toggleGeneral" id="general" :active="switches.general">All</b-dropdown-item>
+					<b-dropdown-item v-on:click="toggleSports" id="sports" :active="switches.sports">Sports</b-dropdown-item>
+					<b-dropdown-item v-on:click="toggleScience" id="science" :active="switches.science">Science</b-dropdown-item>
+					<b-dropdown-item v-on:click="toggleHealth" id="health" :active="switches.health">Health</b-dropdown-item>
+					<b-dropdown-item v-on:click="toggleTechnology" id="technology" :active="switches.technology">Technology</b-dropdown-item>
+					<b-dropdown-item v-on:click="toggleEntertainment" id="entertainment" :active="switches.entertainment">Entertainment</b-dropdown-item>
+					<b-dropdown-item v-on:click="toggleBusiness" id="business" :active="switches.business">Business</b-dropdown-item>
+			  </b-dropdown>
+			</div>
+        	<div style="display:inline">
+        		<input type="text" v-model="searchText" placeholder="Search articles by word...">
+        		<button class="btn btn-info" v-on:click="Search">Search</button>
         	</div>
         	<div>
         		<p>Hello, {{username}}!</p>
@@ -47,10 +51,20 @@
 		data: function() {
 			return {
 				isModalVisible: false,
+				switches: {
+					"general": true,
+					"sports": false,
+					"science": false,
+					"health": false,
+					"technology": false,
+					"entertainment": false,
+					"business": false
+				},
 				page: 2,
 				username: '',
 				news: [],
 				category: 'general',
+				categoryName: 'All',
 				searchText: '',
 				comments: [],
 				modal: {
@@ -125,8 +139,11 @@
 				window.scrollTo(0, posScroll);
 			},
 			toggleGeneral: function(){
+				this.switches[this.category] = false
 				this.category = 'general'
 				this.news = []
+				this.switches[this.category] = true
+				this.categoryName = "All"
 				const proxyurl = "https://cors-anywhere.herokuapp.com/";
 				var url = 'https://newsapi.org/v2/top-headlines?' +
 				          'country=gb&' +
@@ -135,8 +152,11 @@
 				this.page = 2;          
 			},
 			toggleSports: function(){
+				this.switches[this.category] = false
 				this.category = 'sports'
 				this.news = []
+				this.switches[this.category] = true
+				this.categoryName = "Sports"
 				const proxyurl = "https://cors-anywhere.herokuapp.com/";
 				var url = 'https://newsapi.org/v2/top-headlines?' +
 				          'country=gb&' + 'category='+this.category+'&' +
@@ -145,8 +165,11 @@
 				this.page = 2; 
 			},
 			toggleTechnology: function(){
+				this.switches[this.category] = false
 				this.category = 'technology'
 				this.news = []
+				this.switches[this.category] = true
+				this.categoryName = "Technology"
 				const proxyurl = "https://cors-anywhere.herokuapp.com/";
 				var url = 'https://newsapi.org/v2/top-headlines?' +
 				          'country=gb&' + 'category='+this.category+'&' +
@@ -155,8 +178,11 @@
 				this.page = 2; 
 			},
 			toggleEntertainment: function(){
+				this.switches[this.category] = false
 				this.category = 'entertainment'
 				this.news = []
+				this.switches[this.category] = true
+				this.categoryName = "Entertainment"
 				const proxyurl = "https://cors-anywhere.herokuapp.com/";
 				var url = 'https://newsapi.org/v2/top-headlines?' +
 				          'country=gb&' + 'category='+this.category+'&' +
@@ -165,8 +191,11 @@
 				this.page = 2; 
 			},
 			toggleHealth: function(){
+				this.switches[this.category] = false
 				this.category = 'health'
 				this.news = []
+				this.switches[this.category] = true
+				this.categoryName = "Health"
 				const proxyurl = "https://cors-anywhere.herokuapp.com/";
 				var url = 'https://newsapi.org/v2/top-headlines?' +
 				          'country=gb&' + 'category='+this.category+'&' +
@@ -175,8 +204,11 @@
 				this.page = 2; 
 			},
 			toggleScience: function(){
+				this.switches[this.category] = false
 				this.category = "science"
 				this.news = []
+				this.switches[this.category] = true
+				this.categoryName = "Science"
 				const proxyurl = "https://cors-anywhere.herokuapp.com/";
 				var url = 'https://newsapi.org/v2/top-headlines?' +
 				          'country=gb&' + 'category='+this.category+'&' +
@@ -185,8 +217,11 @@
 				this.page = 2; 
 			},
 			toggleBusiness: function(){
+				this.switches[this.category] = false
 				this.category = "business"
 				this.news = []
+				this.switches[this.category] = true
+				this.categoryName = "Business"
 				const proxyurl = "https://cors-anywhere.herokuapp.com/";
 				var url = 'https://newsapi.org/v2/top-headlines?' +
 				          'country=gb&' + 'category='+this.category+'&' +
@@ -197,10 +232,10 @@
 			Search: function(){
 				this.news = []
 				const proxyurl = "https://cors-anywhere.herokuapp.com/";
-				var searchurl = 'https://newsapi.org/v2/top-headlines?' +
-				          'country=gb&' + 'q='+String(this.searchText)+'&'+
+				var searchurl = 'https://newsapi.org/v2/everything?' +
+				          'language=en&' + 'q='+String(this.searchText)+'&'+
 				          'sortBy=published&apiKey=c29490f601b54caaa14a069974e9a927';
-				getData(url, proxyurl);
+				this.getData(searchurl, proxyurl);
 				this.page = 2;
 			},
 			openDiscussion: function(notice){

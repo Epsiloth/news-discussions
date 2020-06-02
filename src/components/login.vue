@@ -74,6 +74,6 @@
 	.my-container {
 		padding: 30px;
 		margin-top: 150px;
-		width: 20%;
+		width: 50%;
 	}
 </style>

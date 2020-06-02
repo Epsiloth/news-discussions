@@ -19,7 +19,8 @@
             <a :href="url" target="_blank">Read More</a>
             <hr>
             <div>
-              <input type="text" class="form-control input-lg" v-model="inputText" v-on:keyup.enter="AddComment">
+              <input type="text" class="form-control input-lg" v-model="inputText" v-on:keyup.enter="AddComment" placeholder="Write a comment...">
+              <button type="submit" class="btn btn-info" v-on:click="AddComment">Comment</button>
             </div>
             <div v-for="comment in this.$props.commentArray">
               <hr>
