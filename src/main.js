@@ -23,7 +23,13 @@ Vue.use(BootstrapVue)
 
 Vue.config.productionTip = false
 
-new Vue({
-  router,
-  render: h => h(App)
-}).$mount('#app')
+let app;
+
+firebase.auth().onAuthStateChanged((user) => {
+    if (!app) {
+    app = new Vue({
+      router,
+      render: h => h(App)
+    }).$mount("#app");
+  }
+});

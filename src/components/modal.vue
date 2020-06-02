@@ -1,7 +1,7 @@
 <template>
   <transition name="modal-fade">
     <div class="modal" tabindex="-1" role="dialog" style="display:inline;">
-      <div class="modal-dialog" role="document">
+      <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
           <div class="modal-header" style="display:block">
             <button type="button" class="close" v-on:click="close" aria-label="Close">
@@ -19,8 +19,7 @@
             <a :href="url" target="_blank">Read More</a>
             <hr>
             <div>
-              <input type="text" v-model="inputText">
-              <button href="/" class="btn btn-info" v-on:click="AddComment">Comment</button>
+              <input type="text" class="form-control input-lg" v-model="inputText" v-on:keyup.enter="AddComment">
             </div>
             <div v-for="comment in this.$props.commentArray">
               <hr>
@@ -42,7 +41,7 @@
   import firebase from "firebase"
   export default {
     name: 'modal',
-    props: ['title', 'image', 'source', 'author', 'time', 'description', 'content', 'url', 'commentArray'],
+    props: ['title', 'image', 'source', 'author', 'time', 'description', 'content', 'url', 'commentArray', 'username'],
     data: function() {
       return {
         inputText: ''
@@ -59,7 +58,12 @@
         if(this.inputText != ""){
           var id = this.$props.url.replace(/[/]/g, '');
           db.collection("comment-list").doc(id).collection("0").add({
-            author: "author",
+            author: this.$props.username,
+            comment: this.inputText,
+            date: today
+          });
+          this.$props.commentArray.push({
+            author: this.$props.username,
             comment: this.inputText,
             date: today
           });
@@ -71,5 +75,5 @@
 </script>
 
 <style>
-  
+
 </style>

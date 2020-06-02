@@ -18,7 +18,7 @@
         		<a href="/" v-on:click="Disconnect" style="color:white">Log Out</a>
         	</div>
     	 </nav>
-    	<div class="d-flex flex-wrap justify-content-center">
+    	<div class="d-flex flex-wrap justify-content-center" id="container">
 			<div v-for="(notice, index) in news" v-bind:key="index" class="card m-5" style="width: 18rem;">
 				<img class="card-img-top" :src="notice.image">
 				<div class="card-body">
@@ -28,7 +28,7 @@
 			</div>
 		</div>
 		<modal v-bind:title="modal.title" v-bind:image="modal.image" v-bind:source="modal.source" v-bind:author="modal.author" v-bind:time="modal.time" v-bind:description="modal.description" v-bind:content="modal.content"
-		v-bind:url="modal.url" v-bind:commentArray="comments"
+		v-bind:url="modal.url" v-bind:commentArray="comments" v-bind:username="username"
 	      v-show="isModalVisible"
 	      @close="closeModal"
 	    />
@@ -47,6 +47,7 @@
 		data: function() {
 			return {
 				isModalVisible: false,
+				page: 2,
 				username: '',
 				news: [],
 				category: 'general',
@@ -65,12 +66,17 @@
 			}
 		},
 		mounted(){
-			this.username = firebase.auth().currentUser.displayName;
+			this.scroll();
+			this.username = firebase.auth().currentUser.email.split("@")[0];
 			const proxyurl = "https://cors-anywhere.herokuapp.com/";
 			var url = 'https://newsapi.org/v2/top-headlines?' +
-				          'country=gb&' +
-				          'sortBy=published&apiKey=c29490f601b54caaa14a069974e9a927';
-			axios
+			          'country=gb&' + 
+			          'sortBy=published&apiKey=c29490f601b54caaa14a069974e9a927';
+			this.getData(url, proxyurl);
+		},
+		methods:{
+			getData: function(url, proxyurl){
+				axios
 				.get(proxyurl+url)
 				.then((response) => {
 					if(response.totalResults < 20){
@@ -89,11 +95,35 @@
 				}).catch(function(error) {
     				console.log(error);
 				});
-		},
-		methods:{
+			},
 	      	closeModal: function() {
 	        	this.isModalVisible = false;
 	        },
+	        scroll () {
+	        	let posScroll;
+				var my_news = this.news;
+				var that = this;
+			    window.onscroll = function(ev) {
+			    	var height = document.getElementById("container").scrollHeight;
+				    if($(this).scrollTop() + $(this).innerHeight() >= height && that.page < 3){
+				    	const proxyurl = "https://cors-anywhere.herokuapp.com/";
+				    	if(that.category == "general"){
+				    		var url = 'https://newsapi.org/v2/top-headlines?' +
+							          'country=gb&page='+ that.page + '&' +
+							          'sortBy=published&apiKey=c29490f601b54caaa14a069974e9a927';
+				        }else{
+				      		var url = 'https://newsapi.org/v2/top-headlines?' +
+							          'country=gb&page='+ that.page + '&' + 'category='+that.category+'&' + 
+							          'sortBy=published&apiKey=c29490f601b54caaa14a069974e9a927';
+				        }
+						posScroll = window.scrollY;
+						that.getData(url, proxyurl);
+						that.page += 1;
+					}
+				};
+				this.news = my_news;
+				window.scrollTo(0, posScroll);
+			},
 			toggleGeneral: function(){
 				this.category = 'general'
 				this.news = []
@@ -101,181 +131,68 @@
 				var url = 'https://newsapi.org/v2/top-headlines?' +
 				          'country=gb&' +
 				          'sortBy=published&apiKey=c29490f601b54caaa14a069974e9a927';
-				axios
-				.get(proxyurl+url)
-				.then((response) => {
-					if(response.totalResults < 20){
-						for(let i=0; i<response.totalResults; i++){
-							this.news.push({title: response.data.articles[i].title, url: response.data.articles[i].url, image: response.data.articles[i].urlToImage, source_name: response.data.articles[i].source.name,
-								author: response.data.articles[i].author, description: response.data.articles[i].description,
-								publishedAt: response.data.articles[i].publishedAt, content: response.data.articles[i].content});
-						}
-					}else{
-						for(let i=0; i<20; i++){
-							this.news.push({title: response.data.articles[i].title, url: response.data.articles[i].url, image: response.data.articles[i].urlToImage, source_name: response.data.articles[i].source.name,
-								author: response.data.articles[i].author, description: response.data.articles[i].description,
-								publishedAt: response.data.articles[i].publishedAt, content: response.data.articles[i].content});
-						}
-					}
-				}).catch(function(error) {
-    				console.log(error);
-				});
+				this.getData(url, proxyurl);
+				this.page = 2;          
 			},
 			toggleSports: function(){
+				this.category = 'sports'
 				this.news = []
 				const proxyurl = "https://cors-anywhere.herokuapp.com/";
 				var url = 'https://newsapi.org/v2/top-headlines?' +
-				          'country=gb&' + 'category=sports&' +
+				          'country=gb&' + 'category='+this.category+'&' +
 				          'sortBy=published&apiKey=c29490f601b54caaa14a069974e9a927';
-				axios
-				.get(proxyurl+url)
-				.then((response) => {
-					if(response.totalResults < 20){
-						for(let i=0; i<response.totalResults; i++){
-							this.news.push({title: response.data.articles[i].title, url: response.data.articles[i].url, image: response.data.articles[i].urlToImage, source_name: response.data.articles[i].source.name,
-								author: response.data.articles[i].author, description: response.data.articles[i].description,
-								publishedAt: response.data.articles[i].publishedAt, content: response.data.articles[i].content});
-						}
-					}else{
-						for(let i=0; i<20; i++){
-							this.news.push({title: response.data.articles[i].title, url: response.data.articles[i].url, image: response.data.articles[i].urlToImage, source_name: response.data.articles[i].source.name,
-								author: response.data.articles[i].author, description: response.data.articles[i].description,
-								publishedAt: response.data.articles[i].publishedAt, content: response.data.articles[i].content});
-						}
-					}
-				}).catch(function(error) {
-    				console.log(error);
-				});
+				this.getData(url, proxyurl);
+				this.page = 2; 
 			},
 			toggleTechnology: function(){
+				this.category = 'technology'
 				this.news = []
 				const proxyurl = "https://cors-anywhere.herokuapp.com/";
 				var url = 'https://newsapi.org/v2/top-headlines?' +
-				          'country=gb&' + 'category=technology&' +
+				          'country=gb&' + 'category='+this.category+'&' +
 				          'sortBy=published&apiKey=c29490f601b54caaa14a069974e9a927';
-				axios
-				.get(proxyurl+url)
-				.then((response) => {
-					if(response.totalResults < 20){
-						for(let i=0; i<response.totalResults; i++){
-							this.news.push({title: response.data.articles[i].title, url: response.data.articles[i].url, image: response.data.articles[i].urlToImage, source_name: response.data.articles[i].source.name,
-								author: response.data.articles[i].author, description: response.data.articles[i].description,
-								publishedAt: response.data.articles[i].publishedAt, content: response.data.articles[i].content});
-						}
-					}else{
-						for(let i=0; i<20; i++){
-							this.news.push({title: response.data.articles[i].title, url: response.data.articles[i].url, image: response.data.articles[i].urlToImage, source_name: response.data.articles[i].source.name,
-								author: response.data.articles[i].author, description: response.data.articles[i].description,
-								publishedAt: response.data.articles[i].publishedAt, content: response.data.articles[i].content});
-						}
-					}
-				}).catch(function(error) {
-    				console.log(error);
-				});
+				this.getData(url, proxyurl);
+				this.page = 2; 
 			},
 			toggleEntertainment: function(){
+				this.category = 'entertainment'
 				this.news = []
 				const proxyurl = "https://cors-anywhere.herokuapp.com/";
 				var url = 'https://newsapi.org/v2/top-headlines?' +
-				          'country=gb&' + 'category=entertainment&' +
+				          'country=gb&' + 'category='+this.category+'&' +
 				          'sortBy=published&apiKey=c29490f601b54caaa14a069974e9a927';
-				axios
-				.get(proxyurl+url)
-				.then((response) => {
-					if(response.totalResults < 20){
-						for(let i=0; i<response.totalResults; i++){
-							this.news.push({title: response.data.articles[i].title, url: response.data.articles[i].url, image: response.data.articles[i].urlToImage, source_name: response.data.articles[i].source.name,
-								author: response.data.articles[i].author, description: response.data.articles[i].description,
-								publishedAt: response.data.articles[i].publishedAt, content: response.data.articles[i].content});
-						}
-					}else{
-						for(let i=0; i<20; i++){
-							this.news.push({title: response.data.articles[i].title, url: response.data.articles[i].url, image: response.data.articles[i].urlToImage, source_name: response.data.articles[i].source.name,
-								author: response.data.articles[i].author, description: response.data.articles[i].description,
-								publishedAt: response.data.articles[i].publishedAt, content: response.data.articles[i].content});
-						}
-					}
-				}).catch(function(error) {
-    				console.log(error);
-				});
+				this.getData(url, proxyurl);
+				this.page = 2; 
 			},
 			toggleHealth: function(){
+				this.category = 'health'
 				this.news = []
 				const proxyurl = "https://cors-anywhere.herokuapp.com/";
 				var url = 'https://newsapi.org/v2/top-headlines?' +
-				          'country=gb&' + 'category=health&' +
+				          'country=gb&' + 'category='+this.category+'&' +
 				          'sortBy=published&apiKey=c29490f601b54caaa14a069974e9a927';
-				axios
-				.get(proxyurl+url)
-				.then((response) => {
-					if(response.totalResults < 20){
-						for(let i=0; i<response.totalResults; i++){
-							this.news.push({title: response.data.articles[i].title, url: response.data.articles[i].url, image: response.data.articles[i].urlToImage, source_name: response.data.articles[i].source.name,
-								author: response.data.articles[i].author, description: response.data.articles[i].description,
-								publishedAt: response.data.articles[i].publishedAt, content: response.data.articles[i].content});
-						}
-					}else{
-						for(let i=0; i<20; i++){
-							this.news.push({title: response.data.articles[i].title, url: response.data.articles[i].url, image: response.data.articles[i].urlToImage, source_name: response.data.articles[i].source.name,
-								author: response.data.articles[i].author, description: response.data.articles[i].description,
-								publishedAt: response.data.articles[i].publishedAt, content: response.data.articles[i].content});
-						}
-					}
-				}).catch(function(error) {
-    				console.log(error);
-				});
+				this.getData(url, proxyurl);
+				this.page = 2; 
 			},
 			toggleScience: function(){
+				this.category = "science"
 				this.news = []
 				const proxyurl = "https://cors-anywhere.herokuapp.com/";
 				var url = 'https://newsapi.org/v2/top-headlines?' +
-				          'country=gb&' + 'category=science&' +
+				          'country=gb&' + 'category='+this.category+'&' +
 				          'sortBy=published&apiKey=c29490f601b54caaa14a069974e9a927';
-				axios
-				.get(proxyurl+url)
-				.then((response) => {
-					if(response.totalResults < 20){
-						for(let i=0; i<response.totalResults; i++){
-							this.news.push({title: response.data.articles[i].title, url: response.data.articles[i].url, image: response.data.articles[i].urlToImage, source_name: response.data.articles[i].source.name,
-								author: response.data.articles[i].author, description: response.data.articles[i].description,
-								publishedAt: response.data.articles[i].publishedAt, content: response.data.articles[i].content});
-						}
-					}else{
-						for(let i=0; i<20; i++){
-							this.news.push({title: response.data.articles[i].title, url: response.data.articles[i].url, image: response.data.articles[i].urlToImage, source_name: response.data.articles[i].source.name,
-								author: response.data.articles[i].author, description: response.data.articles[i].description,
-								publishedAt: response.data.articles[i].publishedAt, content: response.data.articles[i].content});
-						}
-					}
-				}).catch(function(error) {
-    				console.log(error);
-				});
+				this.getData(url, proxyurl);
+				this.page = 2; 
 			},
 			toggleBusiness: function(){
+				this.category = "business"
 				this.news = []
 				const proxyurl = "https://cors-anywhere.herokuapp.com/";
 				var url = 'https://newsapi.org/v2/top-headlines?' +
-				          'country=gb&category=business&' +
+				          'country=gb&' + 'category='+this.category+'&' +
 				          'sortBy=published&apiKey=c29490f601b54caaa14a069974e9a927';
-				axios
-				.get(proxyurl+url)
-				.then((response) => {
-					if(response.totalResults < 20){
-						for(let i=0; i<response.totalResults; i++){
-							this.news.push({title: response.data.articles[i].title, url: response.data.articles[i].url, image: response.data.articles[i].urlToImage, source_name: response.data.articles[i].source.name,
-								author: response.data.articles[i].author, description: response.data.articles[i].description,
-								publishedAt: response.data.articles[i].publishedAt, content: response.data.articles[i].content});
-						}
-					}else{
-						for(let i=0; i<20; i++){
-							this.news.push({title: response.data.articles[i].title, url: response.data.articles[i].url, image: response.data.articles[i].urlToImage, source_name: response.data.articles[i].source.name,
-								author: response.data.articles[i].author, description: response.data.articles[i].description,
-								publishedAt: response.data.articles[i].publishedAt, content: response.data.articles[i].content});
-						}
-					}
-				}).catch(function(error) {
-    				console.log(error);
-				});
+				this.getData(url, proxyurl);
+				this.page = 2; 
 			},
 			Search: function(){
 				this.news = []
@@ -283,25 +200,8 @@
 				var searchurl = 'https://newsapi.org/v2/top-headlines?' +
 				          'country=gb&' + 'q='+String(this.searchText)+'&'+
 				          'sortBy=published&apiKey=c29490f601b54caaa14a069974e9a927';
-				axios
-				.get(proxyurl+searchurl)
-				.then((response) => {
-					if(response.totalResults < 20){
-						for(let i=0; i<response.totalResults; i++){
-							this.news.push({title: response.data.articles[i].title, url: response.data.articles[i].url, image: response.data.articles[i].urlToImage, source_name: response.data.articles[i].source.name,
-								author: response.data.articles[i].author, description: response.data.articles[i].description,
-								publishedAt: response.data.articles[i].publishedAt, content: response.data.articles[i].content});
-						}
-					}else{
-						for(let i=0; i<20; i++){
-							this.news.push({title: response.data.articles[i].title, url: response.data.articles[i].url, image: response.data.articles[i].urlToImage, source_name: response.data.articles[i].source.name,
-								author: response.data.articles[i].author, description: response.data.articles[i].description,
-								publishedAt: response.data.articles[i].publishedAt, content: response.data.articles[i].content});
-						}
-					}
-				}).catch(function(error) {
-    				console.log(error);
-				});
+				getData(url, proxyurl);
+				this.page = 2;
 			},
 			openDiscussion: function(notice){
 				document.body.classList.toggle("modal-open");

@@ -8,11 +8,17 @@ import Register from '../components/register.vue'
 Vue.use(VueRouter)
 
  const routes = [
-  { path: '/', component: Login },
-  { path: '/login', component: Login },
-  { path: '/register', component: Register},
+  { path: '/', component: Login, meta: {
+  	guest: true
+  } },
+  { path: '/login', component: Login, meta: {
+  	guest: true
+  }  },
+  { path: '/register', component: Register, meta: {
+  	guest: true
+  } },
   { path: '/landing', component: Privado, meta: {
-    requiresAuth: true
+    auth: true
   } }
 ]
 
