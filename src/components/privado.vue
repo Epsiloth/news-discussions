@@ -91,7 +91,7 @@
 		methods:{
 			getData: function(url, proxyurl){
 				axios
-				.get(url)
+				.get(proxyurl+url)
 				.then((response) => {
 					if(response.totalResults < 20){
 						for(let i=0; i<response.totalResults; i++){
