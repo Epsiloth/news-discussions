@@ -83,7 +83,7 @@
 			this.scroll();
 			this.username = firebase.auth().currentUser.email.split("@")[0];
 			const proxyurl = "https://cors-anywhere.herokuapp.com/";
-			var url = 'http://newsapi.org/v2/top-headlines?' +
+			var url = 'https://newsapi.org/v2/top-headlines?' +
 			          'country=gb&' + 
 			          'sortBy=published&apiKey=c29490f601b54caaa14a069974e9a927';
 			this.getData(url, proxyurl);
