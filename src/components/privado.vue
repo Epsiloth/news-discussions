@@ -60,7 +60,7 @@
 					"entertainment": false,
 					"business": false
 				},
-				page: 2,
+				page: 1,
 				username: '',
 				news: [],
 				category: 'general',
@@ -90,25 +90,41 @@
 		},
 		methods:{
 			getData: function(url, proxyurl){
-				axios
-				.get(url)
+				axios({
+			    "method":"GET",
+			    "url":"https://contextualwebsearch-websearch-v1.p.rapidapi.com/api/Search/NewsSearchAPI",
+			    "headers":{
+			    "content-type":"application/octet-stream",
+			    "x-rapidapi-host":"contextualwebsearch-websearch-v1.p.rapidapi.com",
+			    "x-rapidapi-key":"2ba7fd0b63msh8230ea443168fe7p1b05c0jsnef8102d85a9d",
+			    "useQueryString":true
+			    },"params":{
+			    "autoCorrect":"false",
+			    "pageNumber": this.page,
+			    "pageSize":"20",
+			    "q":"Coronavirus",
+			    "safeSearch":"true"
+			    }
+			    })
 				.then((response) => {
+					console.log(response);
 					if(response.totalResults < 20){
-						for(let i=0; i<response.totalResults; i++){
-							this.news.push({title: response.data.articles[i].title, url: response.data.articles[i].url, image: response.data.articles[i].urlToImage, source_name: response.data.articles[i].source.name,
-								author: response.data.articles[i].author, description: response.data.articles[i].description,
-								publishedAt: response.data.articles[i].publishedAt, content: response.data.articles[i].content});
+						for(let i=0; i<response.value.length; i++){
+							this.news.push({title: response.data.value[i].title, url: response.data.value[i].url, image: response.data.value[i].image.url, source_name: response.data.value[i].provider.name,
+								author: "Anonymous", description: response.data.value[i].description,
+								publishedAt: response.data.value[i].datePublished, content: response.data.value[i].body});
 						}
 					}else{
 						for(let i=0; i<20; i++){
-							this.news.push({title: response.data.articles[i].title, url: response.data.articles[i].url, image: response.data.articles[i].urlToImage, source_name: response.data.articles[i].source.name,
-								author: response.data.articles[i].author, description: response.data.articles[i].description,
-								publishedAt: response.data.articles[i].publishedAt, content: response.data.articles[i].content});
+							this.news.push({title: response.data.value[i].title, url: response.data.value[i].url, image: response.data.value[i].image.url, source_name: response.data.value[i].provider.name,
+								author: "Anonymous", description: response.data.value[i].description,
+								publishedAt: response.data.value[i].datePublished, content: response.data.value[i].body});
 						}
 					}
-				}).catch(function(error) {
-    				console.log(error);
-				});
+					this.page += 1;
+				}).catch((error)=>{
+			      console.log(error)
+			    })
 			},
 	      	closeModal: function() {
 	        	this.isModalVisible = false;
@@ -148,8 +164,9 @@
 				var url = 'https://newsapi.org/v2/top-headlines?' +
 				          'country=gb&' +
 				          'sortBy=published&apiKey=c29490f601b54caaa14a069974e9a927';
+		        this.page = 1;  
 				this.getData(url, proxyurl);
-				this.page = 2;          
+				        
 			},
 			toggleSports: function(){
 				this.switches[this.category] = false
@@ -161,8 +178,8 @@
 				var url = 'https://newsapi.org/v2/top-headlines?' +
 				          'country=gb&' + 'category='+this.category+'&' +
 				          'sortBy=published&apiKey=c29490f601b54caaa14a069974e9a927';
+				this.page = 1;
 				this.getData(url, proxyurl);
-				this.page = 2; 
 			},
 			toggleTechnology: function(){
 				this.switches[this.category] = false
@@ -174,8 +191,8 @@
 				var url = 'https://newsapi.org/v2/top-headlines?' +
 				          'country=gb&' + 'category='+this.category+'&' +
 				          'sortBy=published&apiKey=c29490f601b54caaa14a069974e9a927';
+				this.page = 1;
 				this.getData(url, proxyurl);
-				this.page = 2; 
 			},
 			toggleEntertainment: function(){
 				this.switches[this.category] = false
@@ -187,8 +204,8 @@
 				var url = 'https://newsapi.org/v2/top-headlines?' +
 				          'country=gb&' + 'category='+this.category+'&' +
 				          'sortBy=published&apiKey=c29490f601b54caaa14a069974e9a927';
-				this.getData(url, proxyurl);
-				this.page = 2; 
+				this.page = 1;
+				this.getData(url, proxyurl); 
 			},
 			toggleHealth: function(){
 				this.switches[this.category] = false
@@ -200,8 +217,8 @@
 				var url = 'https://newsapi.org/v2/top-headlines?' +
 				          'country=gb&' + 'category='+this.category+'&' +
 				          'sortBy=published&apiKey=c29490f601b54caaa14a069974e9a927';
+				this.page = 1;
 				this.getData(url, proxyurl);
-				this.page = 2; 
 			},
 			toggleScience: function(){
 				this.switches[this.category] = false
@@ -213,8 +230,8 @@
 				var url = 'https://newsapi.org/v2/top-headlines?' +
 				          'country=gb&' + 'category='+this.category+'&' +
 				          'sortBy=published&apiKey=c29490f601b54caaa14a069974e9a927';
+				this.page = 1;
 				this.getData(url, proxyurl);
-				this.page = 2; 
 			},
 			toggleBusiness: function(){
 				this.switches[this.category] = false
@@ -226,8 +243,8 @@
 				var url = 'https://newsapi.org/v2/top-headlines?' +
 				          'country=gb&' + 'category='+this.category+'&' +
 				          'sortBy=published&apiKey=c29490f601b54caaa14a069974e9a927';
+				this.page = 1;
 				this.getData(url, proxyurl);
-				this.page = 2; 
 			},
 			Search: function(){
 				this.news = []
@@ -235,8 +252,8 @@
 				var searchurl = 'https://newsapi.org/v2/everything?' +
 				          'language=en&' + 'q='+String(this.searchText)+'&'+
 				          'sortBy=published&apiKey=c29490f601b54caaa14a069974e9a927';
-				this.getData(searchurl, proxyurl);
-				this.page = 2;
+				this.page = 1;
+				this.getData(url, proxyurl);
 			},
 			openDiscussion: function(notice){
 				document.body.classList.toggle("modal-open");
