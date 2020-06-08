@@ -1,19 +1,8 @@
-# project
+#Final project for DAW
 
-## Project setup
-```
-npm install
-```
+To run the deployment version, you only need the dist folder. Download it and place it wherever you want. 
+In the folder where the dist folder is located, run:
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+```serve -s dist```
 
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+It will deploy the production version of the project and show on the console the port where it has been deployed.
