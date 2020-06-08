@@ -1,4 +1,4 @@
-#Final project for DAW
+Final project for DAW
 
 To run the deployment version, you only need the dist folder. Download it and place it wherever you want. 
 In the folder where the dist folder is located, run:
